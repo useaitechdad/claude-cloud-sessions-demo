@@ -58,6 +58,10 @@
     line-height: 1.05;
   }
 
+  .big.urgent {
+    color: #e05a5a;
+  }
+
   .big.passed {
     color: #e05a5a;
     font-size: 64px;
@@ -108,6 +112,9 @@
           big.className = "big passed";
           big.textContent = "Deadline passed";
         } else {
+          if (window.Countdown.isUrgent(entry.due, new Date())) {
+            big.className = "big urgent";
+          }
           big.textContent = result.days + " days, " + result.hours + " hours";
         }
 

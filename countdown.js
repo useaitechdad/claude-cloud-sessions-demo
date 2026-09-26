@@ -4,8 +4,12 @@
 // still works with no build step.
 
 var DEADLINES = [
-  { label: "Claim your credit", due: "2026-10-08T06:59:00Z" }
+  { label: "Claim your credit", due: "2026-10-08T06:59:00Z" },
+  // Nov 4, 2026 11:59 PM PST (UTC-8; DST ends Nov 1).
+  { label: "Credit expires", due: "2026-11-05T07:59:00Z" }
 ];
+
+var URGENT_DAYS = 14;
 
 // dueISO: ISO 8601 UTC instant string.
 // now: a Date or a number of milliseconds since epoch.
@@ -28,7 +32,19 @@ function timeLeft(dueISO, now) {
   return { days: days, hours: hours, passed: false };
 }
 
-var Countdown = { DEADLINES: DEADLINES, timeLeft: timeLeft };
+// True when the deadline has not passed but less than URGENT_DAYS remain.
+function isUrgent(dueISO, now) {
+  var nowMs = now instanceof Date ? now.getTime() : now;
+  var diffMs = new Date(dueISO).getTime() - nowMs;
+  return diffMs > 0 && diffMs < URGENT_DAYS * 24 * 60 * 60 * 1000;
+}
+
+var Countdown = {
+  DEADLINES: DEADLINES,
+  URGENT_DAYS: URGENT_DAYS,
+  timeLeft: timeLeft,
+  isUrgent: isUrgent
+};
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = Countdown;
