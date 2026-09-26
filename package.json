@@ -1,0 +1,13 @@
+{
+  "name": "claude-cloud-sessions-demo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Credit countdown demo for a Claude Code cloud sessions video.",
+  "main": "countdown.js",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

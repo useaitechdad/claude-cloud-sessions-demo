@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Credit Countdown</title>
+<script src="countdown.js"></script>
+<style>
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #111318;
+    color: #f2f3f5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    height: 100%;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  .card {
+    background: #191c22;
+    border: 1px solid #2a2e37;
+    border-radius: 20px;
+    padding: 56px 72px;
+    min-width: 480px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  }
+
+  .label {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #c7ccd6;
+    margin: 0 0 24px 0;
+    text-transform: uppercase;
+  }
+
+  .big {
+    font-size: 96px;
+    font-weight: 700;
+    color: #45C4C8;
+    margin: 0 0 20px 0;
+    line-height: 1.05;
+  }
+
+  .big.passed {
+    color: #e05a5a;
+    font-size: 64px;
+  }
+
+  .due {
+    font-size: 24px;
+    color: #8d94a3;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+  <div class="cards" id="cards"></div>
+
+  <script>
+    function formatDue(dueISO) {
+      var d = new Date(dueISO);
+      var opts = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short"
+      };
+      return d.toLocaleString("en-US", opts);
+    }
+
+    function render() {
+      var container = document.getElementById("cards");
+      container.innerHTML = "";
+
+      window.Countdown.DEADLINES.forEach(function (entry) {
+        var result = window.Countdown.timeLeft(entry.due, new Date());
+
+        var card = document.createElement("div");
+        card.className = "card";
+
+        var label = document.createElement("p");
+        label.className = "label";
+        label.textContent = entry.label;
+
+        var big = document.createElement("p");
+        big.className = "big";
+        if (result.passed) {
+          big.className = "big passed";
+          big.textContent = "Deadline passed";
+        } else {
+          big.textContent = result.days + " days, " + result.hours + " hours";
+        }
+
+        var due = document.createElement("p");
+        due.className = "due";
+        due.textContent = formatDue(entry.due);
+
+        card.appendChild(label);
+        card.appendChild(big);
+        card.appendChild(due);
+        container.appendChild(card);
+      });
+    }
+
+    render();
+    setInterval(render, 60 * 1000);
+  </script>
+
+</body>
+</html>
